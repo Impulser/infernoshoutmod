@@ -2,17 +2,17 @@ define(function() {
 	var REPLACE_REGEXP = new RegExp(/^s\/(.*)\/(.*)\/$/),
 		shoutIdRegex = new RegExp(/edit_shout\((\d+)\)/);
 
-	var ShoutReplacePlugin = function(mod) {
+	var ShoutReplacePlugin = function (mod) {
 		var ID_REGEXP = new RegExp(/pm_(\d+)/);
 
-		$.expr[':'].isOwnUser = function(obj, index, meta, stack){
-			if (obj.ondblclick == undefined || typeof(obj.ondblclick) !== 'function') {
+		$.expr[':'].isOwnUser = function (obj, index, meta, stack) {
+			if (obj.ondblclick == undefined || typeof (obj.ondblclick) !== 'function') {
 				return false;
 			}
 
 			var obj = $('a:first', obj).get(0);
 
-			if (!obj.onclick) {
+			if (!obj || !obj.onclick) {
 				return;
 			}
 
@@ -39,7 +39,7 @@ define(function() {
 				.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
 		}
 
-		mod.on('shout', function(ctx, evt) {
+		mod.on('shout', function (ctx, evt) {
 			var match = REPLACE_REGEXP.exec(evt.message);
 
 			if (match) {
@@ -60,7 +60,7 @@ define(function() {
 				var id = shoutIdRegex.exec(dblclick);
 				id = id[1];
 
-				var replace_shout_fetched = function() {
+				var replace_shout_fetched = function () {
 					ajax = InfernoShoutbox.editshout.ajax;
 					if (ajax.handler.readyState == 4 && ajax.handler.status == 200) {
 						InfernoShoutbox.set_loader('none');
